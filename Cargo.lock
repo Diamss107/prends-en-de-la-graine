@@ -2837,12 +2837,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "marching-squares"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "01478a84ada790fd53e9fac9b9cc5651eebdbf1b5aadee6a00c084225b630c38"
-
-[[package]]
 name = "matchers"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3557,7 +3551,6 @@ dependencies = [
  "bevy",
  "bevy_prototype_lyon",
  "image",
- "marching-squares",
  "rand 0.9.0",
 ]
 
