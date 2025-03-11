@@ -3,7 +3,7 @@ use image::{Rgba, RgbaImage};
 use std::collections::HashMap;
 
 pub fn provinces_from_bmp(color_bmp: RgbaImage) -> HashMap<Rgba<u8>, Vec<Vec2>> {
-    let mut provinces_points: HashMap<Rgba<u8>, Vec<Vec2>> = HashMap::new();
+    let mut provinces_limit_points: HashMap<Rgba<u8>, Vec<Vec2>> = HashMap::new();
 
     for y in 0..color_bmp.height() {
         for x in 0..color_bmp.width() {
@@ -14,7 +14,7 @@ pub fn provinces_from_bmp(color_bmp: RgbaImage) -> HashMap<Rgba<u8>, Vec<Vec2>> 
             }
 
             if pixel.is_limit_of_a_province(&color_bmp) {
-                provinces_points
+                provinces_limit_points
                     .entry(pixel.color)
                     .or_insert_with(Vec::new)
                     .push(pixel.get_world_pos(&color_bmp));
@@ -22,7 +22,7 @@ pub fn provinces_from_bmp(color_bmp: RgbaImage) -> HashMap<Rgba<u8>, Vec<Vec2>> 
         }
     }
 
-    provinces_points
+    provinces_limit_points
 }
 
 struct BmpProvincePixel {

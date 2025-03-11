@@ -1,3 +1,4 @@
+use crate::map::ProvincesConfig;
 use crate::*;
 use image::Rgba;
 use std::collections::{HashMap, VecDeque};
@@ -6,40 +7,33 @@ mod build;
 
 #[derive(Component)]
 pub struct Province {
-    pub points: Vec<Vec2>, // Liste des points qui définissent la frontière de la province
+    pub tag: String,
+    pub limit_points: Vec<Vec2>,
 }
 
-pub fn provinces_from_bmp_startup_system(mut commands: Commands) {
+pub fn provinces_from_bmp(bmp_path: &str, provinces_config: ProvincesConfig) -> Vec<Province> {
     // Charger l'image BMP
-    let mut provinces_points = build::provinces_from_bmp(
-        image::open(config::BMP_FILE)
+    let mut provinces_limit_points = build::provinces_from_bmp(
+        image::open(bmp_path)
             .expect("Impossible de charger l'image")
             .into_rgba8(),
     );
-
     // Tri final ultra-précis
-    sort_provinces_points(&mut provinces_points);
-
-    for (_, points) in provinces_points {
-        let shape = shapes::Polygon {
-            points: points.clone(),
-            closed: true,
-        };
-
-        commands.spawn((
-            ShapeBundle {
-                path: GeometryBuilder::build_as(&shape),
-                ..default()
-            },
-            Stroke::new(
-                config::PROVINCE_BORDER_COLOR.with_alpha(0.0), // Opacité initiale à 0 (invisible)
-                4.0,
-            ),
-            Province {
-                points, // Stocke les points pour la détection
-            },
-        ));
+    sort_provinces_points(&mut provinces_limit_points);
+    
+    let mut provinces= Vec::new();
+    for (color, limit_points) in provinces_limit_points {
+        let tag = provinces_config.colors_to_tags.get(&[color[0], color[1], color[2]]);
+        if let Some(tag) = tag
+        {
+            provinces.push(Province {
+                tag: tag.clone(),
+                limit_points,
+            })
+        }
     }
+
+    provinces
 }
 
 pub fn province_hovered_update_system(
@@ -53,11 +47,10 @@ pub fn province_hovered_update_system(
     // On vérifie que la souris est dans la fenêtre du jeu
     if let Some(cursor_position) = window.cursor_position() {
         // On récupère la position de la souris relativement au monde
-        if let Ok(world_position) = camera.viewport_to_world_2d(camera_transform, cursor_position)
-        {
+        if let Ok(world_position) = camera.viewport_to_world_2d(camera_transform, cursor_position) {
             // Pour chaque province, on vérifie si la souris est à l'intérieur
             for (province, mut stroke) in query.iter_mut() {
-                let is_inside = is_point_inside_polygon(world_position, &province.points);
+                let is_inside = is_point_inside_polygon(world_position, &province.limit_points);
 
                 // On fait apparaître le contour de la province si la souris est bien à l'intérieur
                 // sinon on cache la province si la souris n'est plus à l'intérieur.

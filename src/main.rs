@@ -1,4 +1,3 @@
-use crate::map::provinces::Province;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
@@ -12,9 +11,9 @@ fn main() {
         .insert_resource(ClearColor(Color::WHITE))
         .add_systems(
             Startup,
-            (setup, map::provinces::provinces_from_bmp_startup_system).chain(),
+            (setup, map::map_startup_sytem).chain(),
         )
-        .add_systems(Update, map::provinces::province_hovered_update_system) // Gestion de l'opacité avec la souris
+        .add_systems(Update, map::map_update_system) // Gestion de l'opacité avec la souris
         .run();
 }
 

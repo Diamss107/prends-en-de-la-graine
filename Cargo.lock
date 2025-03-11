@@ -3552,6 +3552,8 @@ dependencies = [
  "bevy_prototype_lyon",
  "image",
  "rand 0.9.0",
+ "serde",
+ "toml",
 ]
 
 [[package]]

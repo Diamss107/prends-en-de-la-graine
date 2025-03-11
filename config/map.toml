@@ -1,0 +1,13 @@
+[provinces.colors_to_tags]
+"34, 120, 34" = "fto_north_west"
+"98, 5, 5" = "fto_north_north_west"
+"255, 0, 0" = "fto_north"
+"0, 255, 0" = "fto_north_east"
+"0, 255, 208" = "fto_east"
+"86, 20, 159" = "fto_south_east"
+"56, 0, 56" = "fto_south_south_east"
+"255, 175, 255" = "fto_south"
+"255, 152, 0" = "fto_south_west"
+"31, 31, 109" = "fto_west"
+"99, 99, 0" = "fto_center"
+"255, 255, 67" = "fto_center_north_east"
